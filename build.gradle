@@ -1,0 +1,74 @@
+buildscript {
+
+    ext {
+        kotlin_version = '1.2.20'
+        vertx_version = '3.5.0'
+        jooq_version = '3.10.4'
+        konfig_version = '1.6.1.0'
+    }
+
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '1.2.4'
+}
+
+group 'io.areguig'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'kotlin'
+
+
+mainClassName = 'io.vertx.core.Launcher'
+def mainVerticleName = 'io.areguig.kxj.KxjVerticle'
+
+repositories {
+    jcenter()
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+dependencies {
+    compile "io.vertx:vertx-core:$vertx_version"
+    compile "io.vertx:vertx-lang-kotlin:$vertx_version"
+    compile "io.vertx:vertx-web:$vertx_version"
+    compile "org.jooq:jooq:$jooq_version"
+    compile "com.natpryce:konfig:$konfig_version"
+
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+}
+
+run {
+    args = ['run', mainVerticleName,
+            "--launcher-class=$mainClassName",
+            "--redeploy=src/**/*.*",
+            "--on-redeploy=./gradlew classes"
+    ]
+}
+
+// Naming and packaging settings for the "shadow jar".
+shadowJar {
+    baseName = 'kotlin-vert.x-jooq'
+    classifier = 'shadow'
+
+    manifest {
+        attributes 'Main-Verticle': mainVerticleName
+    }
+    mergeServiceFiles {
+        include 'META-INF/services/io.vertx.core.spi.VerticleFactory'
+    }
+}
