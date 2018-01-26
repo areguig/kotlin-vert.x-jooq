@@ -1,0 +1,10 @@
+{
+  "http.port": 8082,
+  "dataSource": {
+    "url" : "jdbc:postgresql://localhost:5432/akli",
+    "driver_class" : "org.postgresql.Driver",
+    "max_pool_size" : 30,
+    "user" : "akli",
+    "password" : "akli"
+  }
+}

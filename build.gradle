@@ -46,8 +46,10 @@ dependencies {
     compile "io.vertx:vertx-core:$vertx_version"
     compile "io.vertx:vertx-lang-kotlin:$vertx_version"
     compile "io.vertx:vertx-web:$vertx_version"
+    compile "io.vertx:vertx-jdbc-client:$vertx_version"
+    compile "io.vertx:vertx-config:$vertx_version"
     compile "org.jooq:jooq:$jooq_version"
-    compile "com.natpryce:konfig:$konfig_version"
+    compile group: 'postgresql', name: 'postgresql', version: '9.0-801.jdbc4'
 
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
 }
@@ -56,7 +58,8 @@ run {
     args = ['run', mainVerticleName,
             "--launcher-class=$mainClassName",
             "--redeploy=src/**/*.*",
-            "--on-redeploy=./gradlew classes"
+            "--on-redeploy=./gradlew classes",
+            "-conf conf/application.json"
     ]
 }
 
